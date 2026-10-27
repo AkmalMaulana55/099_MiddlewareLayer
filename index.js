@@ -15,5 +15,6 @@ const pool = new Pool({
     port: process.env.DB_PORT,
 });
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+
