@@ -119,8 +119,8 @@ app.put(
     validateParams(idSchema), 
     validateBody(
         biodataSchema
-            .fork({"nama", "nim", "kelas"}, (field) => field.optional())
-            .fork({"id"}, (field) => field.forbidden()),
+            .fork(["nama", "nim", "kelas"], (field) => field.optional())
+            .fork(["id"], (field) => field.forbidden()),
     ), 
     async (req, res) => {
         const { id } = req.params
@@ -148,4 +148,20 @@ app.delete('/biodata/:id', validateParams(idSchema), async (req, res) => {
         return errorResponse(res, 'Data Tidak Ditemukan', 404)
     }
     return successResponse(res, 'Data Berhasil Dihapus', result.rows[0])
+})
+
+app.use((req, res) => {
+    return errorResponse(res, 'Endpoint Tidak Ditemukan', 404)
+})
+
+app.use((err, req, res, next) => {
+    console.error(err)
+    if (res.headersSent) {
+        return next(err)
+    }
+    return errorResponse(res, 'Terjadi Kesalahan pada Server', 500)
+})
+
+app.listen(port, () => {
+    console.log(`Server berjalan di http://localhost:${port}`)
 })
